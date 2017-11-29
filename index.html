@@ -90,6 +90,7 @@
                     <div class="form-group">
                         <label>Nombre*: </label>
                         <input type="text" class="form-control" placeholder="Nombre"  ng-model="user.name" ng-change="saveState()" name="name" ng-required="true">
+                        <p ng-if="userForm.name.$invalid && userForm.name.$touched">Nombre incorrecta</p>
                     </div>
                     <div class="form-group">
                         <label>Edad*: </label>
@@ -99,6 +100,7 @@
                     <div class="form-group">
                         <label>Url foto*: </label>
                         <input type="text" class="form-control" placeholder="URL Foto"  ng-model="user.photo" ng-change="saveState()" name="photo" ng-required="true">
+                        <p ng-if="userForm.photo.$invalid && userForm.photo.$touched">url incorrecta</p>
                     </div>
                      <div class="form-group">
                         <label>Teléfono*: </label>
@@ -123,6 +125,7 @@
                          <select ng-model="user.studies" ng-options="item for item in studies" ng-change="saveState()" name="studies" name="studies" ng-required="true">
                              <option value="">Seleccione</option>
                          </select>
+                         <p ng-if="userForm.studies.$invalid && userForm.studies.$touched">Seleccione una opción</p>
                     </div>
 
                     <button type="submit" class="btn btn-default" ng-click="removeForm()">Cancelar</button>

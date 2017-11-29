@@ -16,14 +16,6 @@ img {
     height: 50px;
 }
 
-.main, .search {
-    padding-top: 30px;
-}
-
-.form {
-    background-color: burlywood;
-}
-
 form {
     padding-top: 30px;
     padding-left: 30px;
@@ -35,6 +27,18 @@ form div {
 
 input.ng-invalid.ng-touched {
     border: 1px solid #ff0000;
+}
+
+form select.ng-invalid.ng-touched {
+    border: 1px solid #ff0000;
+}
+
+.main, .search {
+    padding-top: 30px;
+}
+
+.form {
+    background-color: burlywood;
 }
 
 .btn {
