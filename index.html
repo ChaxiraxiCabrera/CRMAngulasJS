@@ -57,7 +57,7 @@
                <h2 class="text-center">Fichas de Usuarios</h2>
                 <div class="row">
                     <div class="col-lg-6 col-lg-offset-3">
-                        <div class="profile" ng-repeat="user in userList | filter:search track by user.id">
+                        <div class="profile" ng-repeat="user in userList | filter:search | orderBy : 'name' track by user.id">
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="row">
