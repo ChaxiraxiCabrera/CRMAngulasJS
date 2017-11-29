@@ -127,7 +127,7 @@
 
                     <button type="submit" class="btn btn-default" ng-click="removeForm()">Cancelar</button>
                     <button type="submit" class="btn btn-success" ng-click="addUser()" ng-hide="modify == 1" ng-disabled="userForm.$invalid">Crear</button>
-                    <button type="submit" class="btn btn-success" ng-click="updateUser()" ng-show="modify == 1">Modificar</button>
+                    <button type="submit" class="btn btn-success" ng-click="updateUser()" ng-show="modify == 1" ng-disabled="userForm.$invalid">Modificar</button>
                 </form>
             </div>
         </div>
