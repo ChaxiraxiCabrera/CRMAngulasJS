@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="CRM">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CRM</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Serif:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body ng-controller="CRMController">
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg 12">
+                    <h1 class="text-center">Mi CRM</h1>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="search">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="row">
+                    <div class="col-lg-2 col-lg-offset-1">
+                        <p><span>Buscar:</span></p>
+                    </div>
+                    <div class="col-lg-3">
+                        <input type="text" placeholder="Nombre" ng-model="search.name" ng-change="saveState()">
+                    </div>
+                    <div class="col-lg-3 col-lg-offset-1">
+                        <input type="text" placeholder="Correo" ng-model="search.mail" ng-change="saveState()">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="row">
+                    <div class="col-lg-3 col-lg-offset-1">
+                        <p><span>Nivel estudios:</span></p>
+                    </div>
+                    <div class="col-lg-3">
+                        <select ng-model="search.studies" ng-change="saveState()">
+                        <option value="">Ninguno</option>
+                        <option ng-repeat="item in studies" [ngValue]="item">{{item}}</option>
+                    </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="main">
+        <div class="row">
+            <div class="col-lg-6">
+               <h2 class="text-center">Fichas de Usuarios</h2>
+                <div class="row">
+                    <div class="col-lg-6 col-lg-offset-3">
+                        <div class="profile" ng-repeat="user in userList | filter:search track by user.id">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-lg-offset-3">
+                                            <img ng-src="{{user.photo}}" alt="userImage">
+                                        </div>
+                                    </div>
+                                    <h3 class="text-center">{{user.name}}</h3>
+                                    <p><span>Edad:</span> {{user.age}}</p>
+                                    <p><span>Teléfono:</span> {{user.phone}}</p>
+                                    <p><span>Correo:</span> {{user.mail}}</p>
+                                    <p><span>Estudios:</span> {{user.studies}}</p>
+                                    <div class="row">
+                                        <div class="col-lg-2 col-lg-offset-1">
+                                            <a href="#" class="btn btn-primary" role="button" ng-click="modifyUser(user.id)">Editar</a>
+                                        </div>
+                                        <div class="col-lg-2 col-lg-offset-3">
+                                            <a href="#" class="btn btn-danger" role="button" ng-click="removeUser(user.id)">Eliminar</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+               <h2 class="text-center">Formulario para usuarios</h2>
+                <form class="form" name="userForm" novalidate>
+                    <div class="form-group">
+                        <label>Nombre*: </label>
+                        <input type="text" class="form-control" placeholder="Nombre"  ng-model="user.name" ng-change="saveState()" name="name" ng-required="true">
+                    </div>
+                    <div class="form-group">
+                        <label>Edad*: </label>
+                        <input type="number" class="form-control" placeholder="Edad"  ng-model="user.age" ng-change="saveState()" name="age" ng-required="true" ng-min=18 ng-max=100>
+                        <p ng-if="userForm.age.$invalid && userForm.age.$touched">Edad incorrecta</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Url foto*: </label>
+                        <input type="text" class="form-control" placeholder="URL Foto"  ng-model="user.photo" ng-change="saveState()" name="photo" ng-required="true">
+                    </div>
+                     <div class="form-group">
+                        <label>Teléfono*: </label>
+                        <input type="text" class="form-control" placeholder="000-00-00-00"  ng-model="user.phone" ng-change="saveState()" name="phone" ng-required="true" ng-minlength=9>
+                        <p ng-if="userForm.phone.$invalid && userForm.phone.$touched">Número incorrecto</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Email*: </label>
+                        <input type="email" class="form-control" placeholder="correo@mail.com"  ng-model="user.mail" ng-change="saveState()" name="mail" ng-required="true" ng-pattern="/[a-zA-Z0-9]+@[a-z]+.[a-z]+/">
+                        <p ng-if="userForm.mail.$invalid && userForm.mail.$touched">Mail Incorrecto</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Descripción: </label>
+                        <textarea class="form-control" placeholder="Descripcion"  ng-model="user.description" ng-change="saveState()" name="description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Otros: </label>
+                        <input type="text" class="form-control" placeholder="otros"  ng-model="user.others" ng-change="saveState()" name="others">
+                    </div>
+                    <div class="form-group">
+                        <label>Nivel de estudios*: </label>
+                         <select ng-model="user.studies" ng-options="item for item in studies" ng-change="saveState()" name="studies" name="studies" ng-required="true">
+                             <option value="">Seleccione</option>
+                         </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-default" ng-click="removeForm()">Cancelar</button>
+                    <button type="submit" class="btn btn-success" ng-click="addUser()" ng-hide="modify == 1" ng-disabled="userForm.$invalid">Crear</button>
+                    <button type="submit" class="btn btn-success" ng-click="updateUser()" ng-show="modify == 1">Modificar</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- LIBS -->
+    <script src="libs/angular.min.js"></script>
+
+    <!-- MODULES -->
+    <script src="js/app.js"></script>
+
+    <!-- CONTROLLERS -->
+    <script src="js/controller/crm.controller.js"></script>
+
+</body>
+
+</html>
