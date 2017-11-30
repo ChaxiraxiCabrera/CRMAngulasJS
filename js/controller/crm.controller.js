@@ -5,10 +5,10 @@
         .module('CRM')
         .controller('CRMController', CRMController);
 
-    CRMController.$inject = ['$scope', 'UsersLocalProvider'];
+    CRMController.$inject = ['$scope', 'StateLocalProvider', 'UserServerProvider'];
 
     /* @ngInject */
-    function CRMController($scope, users) {
+    function CRMController($scope, state, usersServer) {
         $scope.userList = [];
         $scope.user = {};
         $scope.modify = 0;
@@ -29,16 +29,20 @@
         ////////////////
 
         function activate() {
-            $scope.userList = users.getUsers();
-            $scope.user = users.getFormData();
-            $scope.search = users.getFilterData();
-            $scope.modify = users.getState();
+            usersServer.getCustomers()
+                .then(successConnection)
+                .catch(displayServerError);
+            $scope.user = state.getFormData();
+            $scope.search = state.getFilterData();
+            $scope.modify = state.getState();
         }
 
         function addUser() {
-            $scope.user.id = randId();
-            $scope.userList.push($scope.user);
-            users.addUser($scope.user);
+            //users.addUser($scope.user);
+            usersServer.addCustomers($scope.user)
+                .then()
+                .catch(displayServerError);
+           
             $scope.user = {};
             saveState();
             $scope.userForm.$setUntouched();
@@ -51,7 +55,7 @@
 
             if (name == user.name)
                 $scope.userList.splice(index, 1);
-            users.removeUser(id);
+            usersServer.removeCustomer(id);
         }
 
         function modifyUser(id) {
@@ -59,7 +63,7 @@
             var index = checkId(id);
             var copy = angular.copy($scope.userList);
             $scope.user = copy[index];
-            users.saveState(1);
+            state.saveState(1);
             saveState();
         }
 
@@ -68,8 +72,8 @@
             var index = checkId($scope.user.id);
             if (index != -1)
                 $scope.userList[index] = $scope.user;
-            users.updateUser($scope.user);
-            users.saveState(0);
+            usersServer.updateCustomer($scope.user);
+            state.saveState(0);
             $scope.user = {};
             $scope.userForm.$setUntouched();
         }
@@ -79,8 +83,9 @@
         }
 
         function saveState() {
-            users.saveFormData($scope.user);
-            users.saveFilters($scope.search);
+            console.log($scope.user);
+            state.saveFormData($scope.user);
+            state.saveFilters($scope.search);
         }
 
         function checkId(id) {
@@ -107,6 +112,19 @@
                 $scope.message = 'La edad máxima debe ser 100';
                  return true;
             }
+        }
+        
+        function successConnection(users){
+            $scope.userList = users;
+        }
+        
+        function successAdd(id){
+            $scope.user.id = id;
+            $scope.userList.push($scope.user);
+        }
+        
+        function displayServerError(e){
+            console.log("Error al leer datos del servidor");
         }
 
     }
