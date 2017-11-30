@@ -15,7 +15,7 @@ h1, span, h2 {
 img {
     width: 50px;
     height: 50px;
-    margin-left: 115px;
+    margin-left: 30px;
     margin-top: 20px;
 }
 
@@ -40,18 +40,14 @@ form select.ng-invalid.ng-touched {
     padding-top: 30px;
 }
 
-.form {
-    background-color: burlywood;
-}
-
 .btn {
     margin-top: 20px;
 }
 
 .profile {
-    border: 1px solid #000;
-    background-color: antiquewhite;
+    border: 2px solid #000;
     margin-left: 30px;
+    padding-left: 30px;
     margin-bottom: 20px;
     
 }

@@ -5,10 +5,10 @@
         .module('CRM')
         .controller('CRMController', CRMController);
 
-    CRMController.$inject = ['$scope'];
+    CRMController.$inject = ['$scope', 'UsersLocalProvider'];
 
     /* @ngInject */
-    function CRMController($scope) {
+    function CRMController($scope, users) {
         $scope.userList = [];
         $scope.user = {};
         $scope.modify = 0;
@@ -29,23 +29,17 @@
         ////////////////
 
         function activate() {
-            if (checkData()) {
-                var data = JSON.parse(localStorage.getItem('data'));
-                $scope.userList = data;
-
-                if (checkState()) {
-                    $scope.search = JSON.parse(localStorage.getItem('filters'));
-                    $scope.user = JSON.parse(localStorage.getItem('form'));
-                    $scope.modify = localStorage.getItem('modify');
-                }
-            }
+            $scope.userList = users.getUsers();
+            $scope.user = users.getFormData();
+            $scope.search = users.getFilterData();
+            $scope.modify = users.getState();
         }
 
         function addUser() {
             $scope.user.id = randId();
             $scope.userList.push($scope.user);
+            users.addUser($scope.user);
             $scope.user = {};
-            saveData();
             saveState();
             $scope.userForm.$setUntouched();
         }
@@ -57,7 +51,7 @@
 
             if (name == user.name)
                 $scope.userList.splice(index, 1);
-            saveData();
+            users.removeUser(id);
         }
 
         function modifyUser(id) {
@@ -65,17 +59,17 @@
             var index = checkId(id);
             var copy = angular.copy($scope.userList);
             $scope.user = copy[index];
+            users.saveState(1);
             saveState();
         }
 
         function updateUser() {
             $scope.modify = 0;
-            
             var index = checkId($scope.user.id);
             if (index != -1)
                 $scope.userList[index] = $scope.user;
-            saveData();
-            localStorage.setItem('modify', $scope.modify);
+            users.updateUser($scope.user);
+            users.saveState(0);
             $scope.user = {};
             $scope.userForm.$setUntouched();
         }
@@ -84,26 +78,9 @@
             return Math.random().toString(36).substr(2, 10);
         }
 
-        function saveData() {
-            localStorage.setItem('data', JSON.stringify($scope.userList));
-        }
-
         function saveState() {
-            localStorage.setItem('form', JSON.stringify($scope.user));
-            localStorage.setItem('filters', JSON.stringify($scope.search));
-            localStorage.setItem('modify', $scope.modify);
-        }
-
-        function checkData() {
-            if (localStorage.getItem('data') == null)
-                return false;
-            return true;
-        }
-
-        function checkState() {
-            if ((localStorage.getItem('form') == null) && (localStorage.getItem('filter') == null))
-                return false;
-            return true;
+            users.saveFormData($scope.user);
+            users.saveFilters($scope.search);
         }
 
         function checkId(id) {
@@ -113,12 +90,6 @@
                 }
             }
             return -1;
-        }
-
-        function checkForm() {
-            if ($scope.user.name && $scope.user.photo && $scope.user.phone && $scope.user.studies && $scope.user.mail)
-                return true;
-            return false;
         }
 
         function removeForm() {

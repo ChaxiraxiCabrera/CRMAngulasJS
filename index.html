@@ -61,7 +61,7 @@
                     <div class="col-lg-6 col-lg-offset-3">
                         <div class="profile" ng-repeat="user in userList | filter:search | orderBy : 'name' track by user.id">
                             <img ng-src="{{user.photo}}" alt="userImage">
-                            <h3 class="text-center">{{user.name}}</h3>
+                            <h3>{{user.name}}</h3>
                             <p><span>Edad:</span> {{user.age}}</p>
                             <p><span>Teléfono:</span> {{user.phone}}</p>
                             <p><span>Correo:</span> {{user.mail}}</p>
@@ -142,6 +142,9 @@
 
     <!-- MODULES -->
     <script src="js/app.js"></script>
+    
+    <!-- SERVICES & FACTORIES -->
+    <script src="js/factories/users.factory.js"></script>
 
     <!-- CONTROLLERS -->
     <script src="js/controller/crm.controller.js"></script>
