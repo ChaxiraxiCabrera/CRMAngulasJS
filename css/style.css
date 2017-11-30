@@ -3,7 +3,8 @@ body {
 }
 
 header {
-    background-color: darksalmon;
+    background-color: #323031;
+    color: #fff;
 }
 
 
@@ -14,6 +15,8 @@ h1, span, h2 {
 img {
     width: 50px;
     height: 50px;
+    margin-left: 115px;
+    margin-top: 20px;
 }
 
 form {
@@ -50,4 +53,5 @@ form select.ng-invalid.ng-touched {
     background-color: antiquewhite;
     margin-left: 30px;
     margin-bottom: 20px;
+    
 }

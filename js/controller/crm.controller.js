@@ -14,6 +14,7 @@
         $scope.modify = 0;
         $scope.search = {};
         $scope.studies = ['Primaria', 'Secundaria', 'Bachiller', 'Ciclo o Grado'];
+        $scope.message = 'hola';
 
         $scope.addUser = addUser;
         $scope.removeUser = removeUser;
@@ -21,6 +22,7 @@
         $scope.updateUser = updateUser;
         $scope.saveState = saveState;
         $scope.removeForm = removeForm;
+        $scope.displayError = displayError;
 
         activate();
 
@@ -34,6 +36,7 @@
                 if (checkState()) {
                     $scope.search = JSON.parse(localStorage.getItem('filters'));
                     $scope.user = JSON.parse(localStorage.getItem('form'));
+                    $scope.modify = localStorage.getItem('modify');
                 }
             }
         }
@@ -62,14 +65,17 @@
             var index = checkId(id);
             var copy = angular.copy($scope.userList);
             $scope.user = copy[index];
+            saveState();
         }
 
         function updateUser() {
             $scope.modify = 0;
+            
             var index = checkId($scope.user.id);
             if (index != -1)
                 $scope.userList[index] = $scope.user;
             saveData();
+            localStorage.setItem('modify', $scope.modify);
             $scope.user = {};
             $scope.userForm.$setUntouched();
         }
@@ -85,6 +91,7 @@
         function saveState() {
             localStorage.setItem('form', JSON.stringify($scope.user));
             localStorage.setItem('filters', JSON.stringify($scope.search));
+            localStorage.setItem('modify', $scope.modify);
         }
 
         function checkData() {
@@ -118,6 +125,17 @@
             $scope.user = {};
             saveState();
             $scope.userForm.$setUntouched();
+        }
+        
+        function displayError() {
+            let error = $scope.userForm.age.$error;
+            if (error.min){
+                 $scope.message = 'La edad mínima debe ser 18';
+                 return true;
+            }else if (error.max) {
+                $scope.message = 'La edad máxima debe ser 100';
+                 return true;
+            }
         }
 
     }
